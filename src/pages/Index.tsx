@@ -52,9 +52,9 @@ const Index = () => {
         <LanguageSwitcher />
       </div>
       <div className="mx-auto max-w-md px-4 pb-16">
-        <div className="mb-6 text-center text-primary-foreground">
-          <span className="mx-auto mb-4 inline-flex h-14 items-center rounded-xl bg-card px-4 text-2xl font-extrabold lowercase tracking-tight text-primary shadow-lg">
-            servicenow
+        <div className="mb-6 text-center text-white">
+          <span className="mx-auto mb-4 inline-flex h-14 items-center rounded-xl bg-card px-5 shadow-lg">
+            <Wordmark className="text-2xl" />
           </span>
           <h1 className="text-3xl font-extrabold leading-tight">{t("welcome")}</h1>
           <p className="mt-2 text-primary-foreground/90">{t("tagline")}</p>
