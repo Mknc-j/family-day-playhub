@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useLanguage } from "@/lib/language";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { Wordmark } from "@/components/Wordmark";
 import { registerPlayer } from "@/lib/api";
 import { storePlayer, getStoredPlayerNumber } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
