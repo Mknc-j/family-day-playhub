@@ -7,7 +7,7 @@ import { storePlayer, getStoredPlayerNumber } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Trophy, Gamepad2, PartyPopper } from "lucide-react";
+import { Trophy, Gamepad2 } from "lucide-react";
 import type { Player } from "@/lib/types";
 
 const Index = () => {
@@ -52,7 +52,9 @@ const Index = () => {
       </div>
       <div className="mx-auto max-w-md px-4 pb-16">
         <div className="mb-6 text-center text-primary-foreground">
-          <PartyPopper className="mx-auto mb-3 h-14 w-14" />
+          <span className="mx-auto mb-4 inline-flex h-14 items-center rounded-xl bg-card px-4 text-2xl font-extrabold lowercase tracking-tight text-primary shadow-lg">
+            servicenow
+          </span>
           <h1 className="text-3xl font-extrabold leading-tight">{t("welcome")}</h1>
           <p className="mt-2 text-primary-foreground/90">{t("tagline")}</p>
         </div>
