@@ -17,11 +17,11 @@ export function PublicHeader() {
   return (
     <header className="sticky top-0 z-40 border-b bg-card/95 backdrop-blur">
       <div className="mx-auto flex max-w-4xl items-center justify-between gap-2 px-4 py-3">
-        <Link to="/" className="flex items-center gap-2 font-bold">
-          <span className="flex h-8 items-center rounded-md bg-primary px-2 text-sm font-extrabold lowercase tracking-tight text-primary-foreground">
-            now
+        <Link to="/" className="flex items-center gap-2.5 font-bold">
+          <Wordmark className="text-lg" />
+          <span className="hidden text-sm font-medium text-muted-foreground sm:inline">
+            | {t("appName")}
           </span>
-          <span className="hidden text-sm font-semibold text-secondary sm:inline">{t("appName")}</span>
         </Link>
         <div className="flex items-center gap-2">
           <nav className="hidden gap-1 md:flex">
