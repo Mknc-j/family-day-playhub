@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useLanguage } from "@/lib/language";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { Wordmark } from "./Wordmark";
 import { Trophy, Grid3x3, Home, ListChecks } from "lucide-react";
 
 export function PublicHeader() {
