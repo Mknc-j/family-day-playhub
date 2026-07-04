@@ -15,22 +15,26 @@
     --popover: 0 0% 100%;
     --popover-foreground: 194 45% 12%;
 
-    /* ServiceNow green */
-    --primary: 152 60% 38%;
+    /* ServiceNow green (readable for text/fills) */
+    --primary: 140 58% 34%;
     --primary-foreground: 0 0% 100%;
 
-    /* ServiceNow deep ink teal */
-    --secondary: 194 60% 18%;
+    /* ServiceNow deep navy-teal */
+    --secondary: 202 62% 22%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 160 16% 93%;
-    --muted-foreground: 194 15% 40%;
+    --muted-foreground: 202 15% 38%;
 
-    /* bright accent green */
-    --accent: 112 58% 46%;
-    --accent-foreground: 194 45% 12%;
+    /* vivid brand green #63DF4F */
+    --accent: 112 69% 59%;
+    --accent-foreground: 202 45% 14%;
 
-    --success: 152 62% 38%;
+    /* extra charter accents */
+    --brand-blue: 206 100% 66%;
+    --brand-purple: 248 100% 69%;
+
+    --success: 140 58% 34%;
     --success-foreground: 0 0% 100%;
 
     --destructive: 0 74% 52%;
@@ -38,12 +42,13 @@
 
     --border: 160 16% 87%;
     --input: 160 16% 87%;
-    --ring: 152 60% 38%;
+    --ring: 140 58% 34%;
 
     --radius: 0.75rem;
 
-    --gradient-hero: linear-gradient(135deg, hsl(194 60% 18%), hsl(152 62% 38%));
-    --gradient-accent: linear-gradient(135deg, hsl(112 58% 48%), hsl(152 62% 40%));
+    /* navy -> teal -> green, from the brand deck backgrounds */
+    --gradient-hero: linear-gradient(135deg, hsl(206 68% 24%) 0%, hsl(185 45% 22%) 55%, hsl(140 56% 34%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(112 69% 58%), hsl(140 58% 40%));
     --shadow-card: 0 4px 20px -6px hsl(194 45% 20% / 0.14);
     --shadow-lg: 0 12px 32px -10px hsl(152 40% 25% / 0.28);
 
