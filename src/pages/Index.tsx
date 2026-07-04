@@ -7,7 +7,7 @@ import { storePlayer, getStoredPlayerNumber } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Trophy, Gamepad2, PartyPopper } from "lucide-react";
+import { Trophy, Gamepad2 } from "lucide-react";
 import type { Player } from "@/lib/types";
 
 const Index = () => {
