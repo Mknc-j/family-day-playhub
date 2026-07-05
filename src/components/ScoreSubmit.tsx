@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLanguage } from "@/lib/language";
 import { submitScore } from "@/lib/api";
 import { getStoredPlayerNumber } from "@/lib/storage";
+import { usePlayerSession } from "@/components/GameGate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,7 +18,11 @@ interface Props {
 
 export function ScoreSubmit({ gameId, maxScore, score, source, disabled }: Props) {
   const { t } = useLanguage();
-  const [playerNumber, setPlayerNumber] = useState(getStoredPlayerNumber() ?? "");
+  const { player } = usePlayerSession();
+  const locked = Boolean(player);
+  const [playerNumber, setPlayerNumber] = useState(
+    player?.player_number ?? getStoredPlayerNumber() ?? "",
+  );
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -25,9 +30,9 @@ export function ScoreSubmit({ gameId, maxScore, score, source, disabled }: Props
     setStatus("sending");
     setMessage("");
     try {
-      const player = await submitScore({ playerNumber, gameId, score, maxScore, source });
+      const submitted = await submitScore({ playerNumber, gameId, score, maxScore, source });
       setStatus("ok");
-      setMessage(`${t("scoreSent")} — ${player.player_number}`);
+      setMessage(`${t("scoreSent")} — ${submitted.player_number}`);
     } catch (e) {
       setStatus("error");
       const code = (e as Error).message;
@@ -49,14 +54,21 @@ export function ScoreSubmit({ gameId, maxScore, score, source, disabled }: Props
       </div>
       <div className="space-y-2">
         <Label htmlFor="pn">{t("playerNumberLabel")}</Label>
-        <Input
-          id="pn"
-          value={playerNumber}
-          onChange={(e) => setPlayerNumber(e.target.value)}
-          placeholder="FD-001"
-          className="h-12 text-lg uppercase"
-          autoCapitalize="characters"
-        />
+        {locked ? (
+          <div className="flex h-12 items-center justify-between rounded-md border bg-muted px-4 text-lg font-bold">
+            <span>{player?.player_number}</span>
+            <span className="text-sm font-medium text-muted-foreground">{player?.name}</span>
+          </div>
+        ) : (
+          <Input
+            id="pn"
+            value={playerNumber}
+            onChange={(e) => setPlayerNumber(e.target.value)}
+            placeholder="1"
+            inputMode="numeric"
+            className="h-12 text-lg"
+          />
+        )}
       </div>
       <Button
         onClick={handleSubmit}

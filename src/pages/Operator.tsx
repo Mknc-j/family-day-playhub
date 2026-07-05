@@ -225,7 +225,7 @@ const Operator = () => {
             <div className="rounded-2xl border bg-card p-4 shadow-card">
               <p className="mb-3 font-bold">{t("addScore")}</p>
               <div className="grid gap-2 sm:grid-cols-2">
-                <Input placeholder="FD-001" value={manual.playerNumber} onChange={(e) => setManual({ ...manual, playerNumber: e.target.value })} className="h-11" />
+                <Input placeholder="1" value={manual.playerNumber} onChange={(e) => setManual({ ...manual, playerNumber: e.target.value })} className="h-11" />
                 <select className="h-11 rounded-md border bg-background px-3" value={manual.gameId} onChange={(e) => setManual({ ...manual, gameId: e.target.value })}>
                   {games.map((g) => <option key={g.id} value={g.id}>{gameTitle(g.id)}</option>)}
                 </select>
@@ -268,12 +268,31 @@ const Operator = () => {
               <Button variant="outline" onClick={exportLeaderboard}>{t("exportLeaderboard")}</Button>
             </div>
             <div className="rounded-2xl border-2 border-destructive/40 bg-destructive/5 p-4">
-              <p className="mb-3 font-bold text-destructive">{t("dangerZone")}</p>
-              <Label>{t("typeReset")}</Label>
-              <Input value={resetText} onChange={(e) => setResetText(e.target.value)} placeholder="RESET" className="mt-1 h-11" />
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Button variant="destructive" disabled={resetText !== "RESET"} onClick={resetTestScores}>{t("resetTestScores")}</Button>
-                <Button variant="destructive" disabled={resetText !== "RESET"} onClick={resetFull}>{t("resetFull")}</Button>
+              <p className="mb-2 font-bold text-destructive">{t("dangerZone")}</p>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" className="w-full font-semibold sm:w-auto">
+                    {t("resetAllData")}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t("resetAllData")}</AlertDialogTitle>
+                    <AlertDialogDescription>{t("resetAllDataDesc")}</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+                    <AlertDialogAction onClick={resetFull}>{t("confirm")}</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <div className="mt-4 border-t border-destructive/20 pt-4">
+                <Label>{t("typeReset")}</Label>
+                <Input value={resetText} onChange={(e) => setResetText(e.target.value)} placeholder="RESET" className="mt-1 h-11" />
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button variant="destructive" disabled={resetText !== "RESET"} onClick={resetTestScores}>{t("resetTestScores")}</Button>
+                  <Button variant="destructive" disabled={resetText !== "RESET"} onClick={resetFull}>{t("resetFull")}</Button>
+                </div>
               </div>
             </div>
           </TabsContent>
