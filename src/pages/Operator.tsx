@@ -225,7 +225,7 @@ const Operator = () => {
             <div className="rounded-2xl border bg-card p-4 shadow-card">
               <p className="mb-3 font-bold">{t("addScore")}</p>
               <div className="grid gap-2 sm:grid-cols-2">
-                <Input placeholder="FD-001" value={manual.playerNumber} onChange={(e) => setManual({ ...manual, playerNumber: e.target.value })} className="h-11" />
+                <Input placeholder="1" value={manual.playerNumber} onChange={(e) => setManual({ ...manual, playerNumber: e.target.value })} className="h-11" />
                 <select className="h-11 rounded-md border bg-background px-3" value={manual.gameId} onChange={(e) => setManual({ ...manual, gameId: e.target.value })}>
                   {games.map((g) => <option key={g.id} value={g.id}>{gameTitle(g.id)}</option>)}
                 </select>
