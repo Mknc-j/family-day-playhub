@@ -22,6 +22,16 @@ export const t: Dict = {
   home: { en: "Home", ja: "ホーム" },
   sendScore: { en: "Send Score", ja: "スコアを送信" },
   scoreSent: { en: "Score sent", ja: "スコアを送信しました" },
+  // game login gate
+  gameLogin: { en: "Player Login", ja: "プレイヤーログイン" },
+  gameLoginPrompt: { en: "Enter your player number to play this station.", ja: "この番号を入力してステーションで遊びましょう。" },
+  continue: { en: "Continue", ja: "続ける" },
+  noNumberYet: { en: "Don't have a number yet?", ja: "まだ番号がありませんか？" },
+  loginError: { en: "Something went wrong, please retry", ja: "エラーが発生しました。もう一度お試しください" },
+  playingAs: { en: "Playing as", ja: "プレイヤー" },
+  switchPlayer: { en: "Switch player", ja: "プレイヤーを変更" },
+  resetAllData: { en: "Reset all data", ja: "すべてのデータをリセット" },
+  resetAllDataDesc: { en: "Permanently deletes every player and score. This cannot be undone.", ja: "すべてのプレイヤーとスコアを完全に削除します。元に戻せません。" },
   playerNotFound: { en: "Player not found", ja: "プレイヤーが見つかりません" },
   submissionsClosed: {
     en: "Submissions are currently closed",
