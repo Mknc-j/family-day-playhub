@@ -8,7 +8,7 @@ import type { Game } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Lock, Play } from "lucide-react";
 
-const stationIcons = ["🔐", "🛡️", "⚡", "🎮", "🎯"];
+const stationIcons = ["🔐", "🛡️", "⚡", "🦸", "🌐", "🕵️"];
 
 const Games = () => {
   const { t, lang } = useLanguage();
