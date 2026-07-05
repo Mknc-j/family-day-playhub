@@ -34,12 +34,14 @@ const App = () => (
             <Route path="/stations" element={<Stations />} />
             <Route path="/operator-login" element={<OperatorLogin />} />
             <Route path="/operator" element={<Operator />} />
-            <Route path="/games/password-challenge" element={<PasswordChallenge />} />
-            <Route path="/games/security-quiz" element={<SecurityQuiz />} />
-            <Route path="/games/incident-clicker" element={<IncidentClicker />} />
-            <Route path="/games/primary-quiz" element={<PrimaryQuiz />} />
-            <Route path="/games/junior-quiz" element={<JuniorQuiz />} />
-            <Route path="/games/highschool-quiz" element={<HighSchoolQuiz />} />
+            <Route element={<GameGate />}>
+              <Route path="/games/password-challenge" element={<PasswordChallenge />} />
+              <Route path="/games/security-quiz" element={<SecurityQuiz />} />
+              <Route path="/games/incident-clicker" element={<IncidentClicker />} />
+              <Route path="/games/primary-quiz" element={<PrimaryQuiz />} />
+              <Route path="/games/junior-quiz" element={<JuniorQuiz />} />
+              <Route path="/games/highschool-quiz" element={<HighSchoolQuiz />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
