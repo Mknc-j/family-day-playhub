@@ -17,6 +17,7 @@ import PrimaryQuiz from "./pages/games/PrimaryQuiz.tsx";
 import JuniorQuiz from "./pages/games/JuniorQuiz.tsx";
 import HighSchoolQuiz from "./pages/games/HighSchoolQuiz.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import { GameGate } from "./components/GameGate.tsx";
 
 const queryClient = new QueryClient();
 
