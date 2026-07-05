@@ -13,8 +13,9 @@ import Operator from "./pages/Operator.tsx";
 import PasswordChallenge from "./pages/games/PasswordChallenge.tsx";
 import SecurityQuiz from "./pages/games/SecurityQuiz.tsx";
 import IncidentClicker from "./pages/games/IncidentClicker.tsx";
-import Station4 from "./pages/games/Station4.tsx";
-import Station5 from "./pages/games/Station5.tsx";
+import PrimaryQuiz from "./pages/games/PrimaryQuiz.tsx";
+import JuniorQuiz from "./pages/games/JuniorQuiz.tsx";
+import HighSchoolQuiz from "./pages/games/HighSchoolQuiz.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
