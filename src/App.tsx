@@ -37,8 +37,9 @@ const App = () => (
             <Route path="/games/password-challenge" element={<PasswordChallenge />} />
             <Route path="/games/security-quiz" element={<SecurityQuiz />} />
             <Route path="/games/incident-clicker" element={<IncidentClicker />} />
-            <Route path="/games/station-4" element={<Station4 />} />
-            <Route path="/games/station-5" element={<Station5 />} />
+            <Route path="/games/primary-quiz" element={<PrimaryQuiz />} />
+            <Route path="/games/junior-quiz" element={<JuniorQuiz />} />
+            <Route path="/games/highschool-quiz" element={<HighSchoolQuiz />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
