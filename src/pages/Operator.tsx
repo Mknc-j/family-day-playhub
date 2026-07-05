@@ -268,12 +268,31 @@ const Operator = () => {
               <Button variant="outline" onClick={exportLeaderboard}>{t("exportLeaderboard")}</Button>
             </div>
             <div className="rounded-2xl border-2 border-destructive/40 bg-destructive/5 p-4">
-              <p className="mb-3 font-bold text-destructive">{t("dangerZone")}</p>
-              <Label>{t("typeReset")}</Label>
-              <Input value={resetText} onChange={(e) => setResetText(e.target.value)} placeholder="RESET" className="mt-1 h-11" />
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Button variant="destructive" disabled={resetText !== "RESET"} onClick={resetTestScores}>{t("resetTestScores")}</Button>
-                <Button variant="destructive" disabled={resetText !== "RESET"} onClick={resetFull}>{t("resetFull")}</Button>
+              <p className="mb-2 font-bold text-destructive">{t("dangerZone")}</p>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" className="w-full font-semibold sm:w-auto">
+                    {t("resetAllData")}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t("resetAllData")}</AlertDialogTitle>
+                    <AlertDialogDescription>{t("resetAllDataDesc")}</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+                    <AlertDialogAction onClick={resetFull}>{t("confirm")}</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <div className="mt-4 border-t border-destructive/20 pt-4">
+                <Label>{t("typeReset")}</Label>
+                <Input value={resetText} onChange={(e) => setResetText(e.target.value)} placeholder="RESET" className="mt-1 h-11" />
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button variant="destructive" disabled={resetText !== "RESET"} onClick={resetTestScores}>{t("resetTestScores")}</Button>
+                  <Button variant="destructive" disabled={resetText !== "RESET"} onClick={resetFull}>{t("resetFull")}</Button>
+                </div>
               </div>
             </div>
           </TabsContent>
