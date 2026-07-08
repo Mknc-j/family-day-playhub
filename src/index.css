@@ -94,6 +94,7 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: Helvetica, Arial, sans-serif;
     -webkit-tap-highlight-color: transparent;
   }
 }
@@ -107,5 +108,134 @@
   }
   .shadow-card {
     box-shadow: var(--shadow-card);
+  }
+
+  .quiz-battle {
+    color: hsl(var(--foreground));
+  }
+
+  .quiz-stage {
+    position: relative;
+    overflow: hidden;
+    border: 3px solid hsl(var(--secondary));
+    border-radius: 8px;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        hsl(var(--card)) 0,
+        hsl(var(--card)) 10px,
+        hsl(var(--muted)) 11px,
+        hsl(var(--muted)) 13px
+      );
+    box-shadow: inset 0 0 0 4px hsl(var(--primary) / 0.12), var(--shadow-card);
+  }
+
+  .quiz-stage-grid {
+    display: grid;
+    grid-template-columns: minmax(158px, 1fr) minmax(150px, 1fr);
+    grid-template-areas: "player enemy";
+    align-items: end;
+    min-height: 250px;
+    padding: 18px 14px 16px;
+  }
+
+  .quiz-enemy,
+  .quiz-player {
+    position: relative;
+    z-index: 1;
+  }
+
+  .quiz-enemy {
+    grid-area: enemy;
+    justify-self: end;
+    width: min(100%, 250px);
+  }
+
+  .quiz-player {
+    grid-area: player;
+    justify-self: start;
+    width: min(100%, 246px);
+  }
+
+  .quiz-monster-svg,
+  .quiz-player-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 8px 0 hsl(var(--secondary) / 0.12));
+  }
+
+  .quiz-hp-panel,
+  .quiz-player-label,
+  .quiz-question-panel {
+    border: 3px solid hsl(var(--secondary));
+    border-radius: 8px;
+    background: hsl(var(--card));
+    color: hsl(var(--foreground));
+    box-shadow: 3px 3px 0 hsl(var(--secondary));
+  }
+
+  .quiz-hp-panel {
+    margin-top: -2px;
+    padding: 8px 10px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0;
+  }
+
+  .quiz-hp-track {
+    height: 8px;
+    margin-top: 6px;
+    overflow: hidden;
+    border: 2px solid hsl(var(--secondary));
+    border-radius: 999px;
+    background: hsl(var(--muted));
+  }
+
+  .quiz-hp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, hsl(var(--accent)), hsl(var(--primary)));
+    transition: width 240ms ease;
+  }
+
+  .quiz-player-label {
+    margin-top: -4px;
+    padding: 6px 8px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .quiz-question-panel {
+    padding: 14px;
+  }
+
+  @media (max-width: 430px) {
+    .quiz-stage-grid {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "enemy"
+        "player";
+      gap: 4px;
+      min-height: 390px;
+      padding: 14px 10px 12px;
+    }
+
+    .quiz-enemy {
+      justify-self: center;
+      width: min(84vw, 260px);
+    }
+
+    .quiz-player {
+      justify-self: start;
+      width: min(78vw, 275px);
+      margin-left: -10px;
+    }
+
+    .quiz-hp-panel {
+      font-size: 0.68rem;
+    }
   }
 }
