@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Family Day — QR codes des jeux</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 28px; color: #172033; }
+    h1 { margin-bottom: 8px; } .intro { color: #526078; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 28px; }
+    .card { border: 2px solid #dfe5ef; border-radius: 16px; padding: 22px; text-align: center; }
+    img { width: min(100%, 260px); height: auto; } a { word-break: break-all; color: #1264d9; }
+    @media print { .intro, .url { display: none; } body { padding: 0; } .grid { gap: 12px; } }
+  </style>
+</head>
+<body>
+  <h1>Family Day — QR codes</h1>
+  <p class="intro">Imprimez cette page ou utilisez chaque QR code sur le poste correspondant.</p>
+  <div class="grid">
+    <section class="card">
+      <h2>Crack the Access Code</h2>
+      <img src="access-code.svg" alt="QR code pour Crack the Access Code">
+      <p class="url"><a href="../access-code/">Ouvrir le jeu</a></p>
+    </section>
+    <section class="card">
+      <h2>SNS Safety Battle</h2>
+      <img src="sns-safety-battle.svg" alt="QR code pour SNS Safety Battle">
+      <p class="url"><a href="../sns-safety-battle/">Ouvrir le jeu</a></p>
+    </section>
+  </div>
+</body>
+</html>
