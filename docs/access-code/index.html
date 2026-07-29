@@ -1,0 +1,1990 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1728" />
+  <title>Crack the Access Code</title>
+  <style>
+    :root {
+      --bg: #0b1728;
+      --bg-soft: #10243a;
+      --panel: #f7fbff;
+      --panel-muted: #e9f1f7;
+      --ink: #102033;
+      --muted: #5d6c7b;
+      --line: #c8d7e5;
+      --blue: #2478ff;
+      --green: #147a52;
+      --green-dark: #126b49;
+      --amber: #c77700;
+      --red: #cf3333;
+      --shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      min-height: 100%;
+      margin: 0;
+      font-family: Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(34, 160, 107, 0.22), transparent 32%),
+        linear-gradient(140deg, #0b1728 0%, #10243a 46%, #111827 100%);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: max(14px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom));
+    }
+
+    button {
+      font: inherit;
+      touch-action: manipulation;
+    }
+
+    .app {
+      width: min(100%, 920px);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      color: white;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 0 14px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+      color: #f8fbff;
+      font-size: 0.92rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      backdrop-filter: blur(12px);
+    }
+
+    .youmoji-icon {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      flex: 0 0 auto;
+      color: #111827;
+      fill: currentColor;
+      overflow: visible;
+      vertical-align: -0.08em;
+    }
+
+    .brand .youmoji-icon {
+      width: 26px;
+      height: 26px;
+      color: #63df4e;
+    }
+
+    .key .youmoji-icon {
+      width: 1.3em;
+      height: 1.3em;
+    }
+
+    .slot .youmoji-icon {
+      width: 1.15em;
+      height: 1.15em;
+    }
+
+    .guess-chip .youmoji-icon {
+      width: 1.05em;
+      height: 1.05em;
+    }
+
+    .guess-chip.exact .youmoji-icon,
+    .guess-chip.incorrect .youmoji-icon {
+      color: white;
+    }
+
+    .guess-chip.misplaced .youmoji-icon {
+      color: #111827;
+    }
+
+    .fact strong.result-code-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.45em;
+    }
+
+    .result-code-character {
+      display: inline-grid;
+      place-items: center;
+      min-width: 1em;
+    }
+
+    .result-code-character .youmoji-icon {
+      width: 1.05em;
+      height: 1.05em;
+    }
+
+    .youmoji-legend {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 10px;
+      border: 1px solid #cbdbe8;
+      border-radius: 7px;
+      background: #f3f8fc;
+      color: #24364a;
+      font-size: 0.84rem;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .youmoji-legend .youmoji-icon {
+      width: 1.45em;
+      height: 1.45em;
+    }
+
+    .youmoji-legend[hidden] {
+      display: none;
+    }
+
+    @media (forced-colors: active) {
+      .youmoji-icon {
+        color: CanvasText;
+        forced-color-adjust: auto;
+      }
+    }
+
+    .top-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .language-toggle {
+      display: inline-flex;
+      gap: 4px;
+      min-height: 44px;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .language-toggle button {
+      min-width: 48px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .language-toggle button.active {
+      background: white;
+      color: var(--ink);
+    }
+
+    .help-button {
+      min-height: 44px;
+      padding: 0 14px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .panel {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .entry {
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: clamp(20px, 5vw, 34px);
+      color: white;
+      background:
+        linear-gradient(135deg, rgba(36, 120, 255, 0.26), rgba(34, 160, 107, 0.28)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 34px),
+        #0f2137;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 8vw, 4.2rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    h2, h3, p { margin-top: 0; }
+
+    ruby {
+      ruby-align: center;
+    }
+
+    rt {
+      font-size: 0.55em;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .subtitle {
+      max-width: 680px;
+      margin: 12px 0 0;
+      color: #d7e6f5;
+      font-size: clamp(1rem, 3.2vw, 1.22rem);
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .education-line {
+      margin: 16px 0 0;
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(34, 160, 107, 0.18);
+      color: #dcfff0;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .difficulty-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      padding: 16px;
+      background: #f1f6fa;
+    }
+
+    .difficulty-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      padding: 16px;
+      border: 2px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      text-align: left;
+    }
+
+    .difficulty-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+
+    .difficulty-name {
+      margin: 0;
+      color: var(--ink);
+      font-size: 1.12rem;
+      line-height: 1.12;
+    }
+
+    .age {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: #e7f7ef;
+      color: var(--green-dark);
+      font-size: 0.78rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .card-copy {
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+
+    .settings {
+      display: grid;
+      gap: 6px;
+      margin: 10px 0 16px;
+      padding: 0;
+      list-style: none;
+      color: #334155;
+      font-size: 0.86rem;
+      line-height: 1.32;
+      font-weight: 800;
+    }
+
+    .settings li {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid #e3ecf3;
+    }
+
+    .start-button, .primary-button, .secondary-button, .danger-button {
+      min-height: 50px;
+      border-radius: var(--radius);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .start-button, .primary-button {
+      border: 0;
+      background: var(--green);
+      color: white;
+    }
+
+    .start-button {
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .secondary-button {
+      border: 2px solid var(--line);
+      background: white;
+      color: var(--ink);
+    }
+
+    .danger-button {
+      border: 2px solid #f2c1c1;
+      background: #fff3f3;
+      color: #a82121;
+    }
+
+    button:disabled,
+    button[aria-disabled="true"] {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    button:not(:disabled):not([aria-disabled="true"]):active {
+      transform: translateY(1px);
+    }
+
+    .game-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .game-main, .history-panel, .result-panel {
+      padding: 16px;
+    }
+
+    .game-header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 14px;
+    }
+
+    .game-title {
+      margin: 0;
+      font-size: clamp(1.5rem, 5vw, 2.2rem);
+      line-height: 1.05;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 9px;
+    }
+
+    .badge {
+      display: inline-flex;
+      min-height: 30px;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #eaf2ff;
+      color: #174ea6;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+
+    .badge.success {
+      background: #e7f7ef;
+      color: var(--green-dark);
+    }
+
+    .score-box {
+      min-width: 118px;
+      padding: 10px;
+      border: 2px solid #d5e3ef;
+      border-radius: var(--radius);
+      background: #f8fbfd;
+      text-align: center;
+    }
+
+    .attempts-left-box {
+      margin-top: 10px;
+      padding: 12px;
+      border: 2px solid #addfca;
+      border-radius: var(--radius);
+      background: #ecfff5;
+      color: var(--green-dark);
+      font-weight: 900;
+    }
+
+    .attempts-left-box strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .small-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .score-number {
+      display: block;
+      margin-top: 3px;
+      color: var(--ink);
+      font-size: 1.35rem;
+      font-weight: 900;
+    }
+
+    .code-zone {
+      display: grid;
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .slot-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .slot-label {
+      flex-basis: 100%;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .slot {
+      display: grid;
+      place-items: center;
+      width: clamp(42px, 10vw, 58px);
+      height: clamp(48px, 11vw, 64px);
+      border: 2px solid #cfe0ee;
+      border-radius: var(--radius);
+      background: #f8fbfd;
+      color: var(--ink);
+      font-size: clamp(1.18rem, 5vw, 1.6rem);
+      font-weight: 900;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .locked {
+      background: #101f33;
+      color: #d7e6f5;
+      border-color: #223e5f;
+    }
+
+    .message {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      border: 2px solid #d9e7f3;
+      border-radius: var(--radius);
+      background: #f8fbfd;
+      color: #334155;
+      font-size: 0.92rem;
+      font-weight: 800;
+      line-height: 1.32;
+    }
+
+    .message.warning {
+      border-color: #f0d197;
+      background: #fff8ea;
+      color: #8a5400;
+    }
+
+    .message.success {
+      border-color: #a9dfc5;
+      background: #ecfff5;
+      color: var(--green-dark);
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .key {
+      min-height: 48px;
+      border: 2px solid #d3e0eb;
+      border-radius: var(--radius);
+      background: white;
+      color: var(--ink);
+      font-size: 1.05rem;
+      font-weight: 900;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      cursor: pointer;
+    }
+
+    .key.used {
+      background: #e9eef4;
+      color: #7b8794;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.5fr;
+      gap: 10px;
+    }
+
+    .history-panel h2 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 10px;
+      max-height: 570px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .empty-history {
+      padding: 14px;
+      border: 2px dashed #d3e0eb;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .attempt-card {
+      padding: 12px;
+      border: 2px solid #d8e4ef;
+      border-radius: var(--radius);
+      background: #fbfdff;
+    }
+
+    .attempt-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+      font-weight: 900;
+    }
+
+    .guess-string {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      word-break: break-all;
+    }
+
+    .guess-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .guess-chip {
+      display: inline-grid;
+      place-items: center;
+      min-width: 32px;
+      height: 32px;
+      padding: 0 8px;
+      border: 2px solid transparent;
+      border-radius: 7px;
+      color: white;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .guess-chip.exact {
+      border-color: #0f6b45;
+      background: var(--green);
+    }
+
+    .guess-chip.misplaced {
+      border-color: #946000;
+      background: #f0b429;
+      color: #392500;
+    }
+
+    .guess-chip.incorrect {
+      border-color: #a82121;
+      background: var(--red);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+      color: #334155;
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-swatch {
+      width: 13px;
+      height: 13px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .legend-swatch.exact { background: var(--green); }
+    .legend-swatch.misplaced { background: #f0b429; }
+    .legend-swatch.incorrect { background: var(--red); }
+
+    .feedback-grid {
+      display: grid;
+      gap: 6px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: #334155;
+    }
+
+    .feedback-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      background: #eef5fb;
+    }
+
+    .result-panel {
+      max-width: 620px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .result-title {
+      margin: 0;
+      font-size: clamp(2rem, 9vw, 4rem);
+      line-height: 1;
+    }
+
+    .result-title.win { color: var(--green-dark); }
+    .result-title.lose { color: var(--red); }
+
+    .result-facts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .fact {
+      padding: 14px;
+      border: 2px solid #d8e4ef;
+      border-radius: var(--radius);
+      background: #fbfdff;
+    }
+
+    .fact strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 1.15rem;
+      word-break: break-word;
+    }
+
+    .learning {
+      padding: 14px;
+      border: 2px solid #addfca;
+      border-radius: var(--radius);
+      background: #ecfff5;
+      color: var(--green-dark);
+      font-weight: 800;
+      line-height: 1.44;
+      text-align: left;
+    }
+
+    .result-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    dialog {
+      width: min(calc(100% - 28px), 560px);
+      border: 0;
+      border-radius: var(--radius);
+      padding: 0;
+      box-shadow: var(--shadow);
+    }
+
+    dialog::backdrop {
+      background: rgba(4, 12, 24, 0.72);
+    }
+
+    .help-panel {
+      padding: 18px;
+      color: var(--ink);
+      background: white;
+    }
+
+    .help-panel h2 {
+      margin-bottom: 10px;
+    }
+
+    .help-panel p, .help-panel li {
+      color: #334155;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .help-panel ul {
+      padding-left: 20px;
+    }
+
+    .help-panel .secondary-button {
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 760px) {
+      .difficulty-grid,
+      .game-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .game-header {
+        grid-template-columns: 1fr;
+      }
+
+      .score-box {
+        width: 100%;
+      }
+
+      .history-list {
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 430px) {
+      body { padding-left: 10px; padding-right: 10px; }
+      .topbar { align-items: flex-start; flex-wrap: wrap; }
+      .top-actions { width: 100%; justify-content: space-between; }
+      .brand, .help-button { min-height: 40px; padding: 0 10px; }
+      .brand { width: 100%; justify-content: center; }
+      .language-toggle { min-height: 40px; }
+      .language-toggle button { min-width: 42px; }
+      .difficulty-grid, .game-main, .history-panel, .result-panel { padding: 12px; }
+      .difficulty-top { display: grid; }
+      .control-grid {
+        grid-template-columns: 0.82fr 0.72fr 1.2fr;
+        gap: 6px;
+      }
+      .control-grid .secondary-button,
+      .control-grid .primary-button {
+        min-height: 42px;
+        padding: 0 6px;
+        font-size: 0.82rem;
+        line-height: 1.1;
+      }
+      .result-actions, .result-facts { grid-template-columns: 1fr; }
+      .keypad { grid-template-columns: repeat(auto-fit, minmax(42px, 1fr)); }
+      .key { min-height: 46px; }
+      .attempt-top { align-items: flex-start; }
+      .guess-chip-row { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="topbar">
+      <div class="brand">
+        <svg class="youmoji-icon" viewBox="0 0 2231.2 2146.8" aria-hidden="true" focusable="false">
+          <path fill-rule="evenodd" d="M1117.9,715.6c-219.2-1.3-400.5,178.1-402.3,398.1-1,116.5,47.5,221.6,125.6,295.6,28.4,26.9,72.3,29.5,103.2,5.4,45.5-35.5,104-56.7,171.2-56.7s125.7,21.2,171.2,56.7c31.1,24.2,75.2,21.1,103.8-6,77-73.2,125-176.8,125-291.6,0-220.9-177.9-400.2-397.7-401.5M1115.6,1317.8c-118.7,0-200-89.4-200-200s81.3-201.5,200-201.5,200,90.9,200,201.5-81.2,200-200,200"/>
+        </svg>
+        <span id="brand-label">Family Day Security Lab</span>
+      </div>
+      <div class="top-actions">
+        <div id="language-toggle" class="language-toggle" role="group" aria-label="Language">
+          <button id="lang-en" class="active" type="button" aria-pressed="true">EN</button>
+          <button id="lang-ja" type="button" aria-pressed="false">日本語</button>
+        </div>
+        <button id="help-open" class="help-button" type="button">How to Play</button>
+      </div>
+    </div>
+
+    <section id="entry-screen" class="screen active">
+      <div class="panel entry">
+        <div class="hero">
+          <h1 id="entry-title" tabindex="-1">Crack the Access Code</h1>
+          <p id="entry-subtitle" class="subtitle">Test your logic. Learn why strong passwords are harder to crack.</p>
+          <p id="education-line" class="education-line">The stronger the password, the harder it is to guess.</p>
+        </div>
+        <div id="difficulty-grid" class="difficulty-grid" aria-label="Choose a difficulty level"></div>
+      </div>
+    </section>
+
+    <section id="game-screen" class="screen">
+      <div class="game-layout">
+        <section id="game-board" class="panel game-main" aria-label="Game board">
+          <div class="game-header">
+            <div>
+              <h2 id="game-title" class="game-title" tabindex="-1">Crack the Access Code</h2>
+              <div class="badge-row">
+                <span id="difficulty-badge" class="badge">Difficulty</span>
+                <span id="attempts-badge" class="badge success">Attempts remaining</span>
+              </div>
+              <div class="attempts-left-box">
+                <span id="attempts-left-label">Attempts left</span>
+                <strong id="attempts-left-number">0</strong>
+              </div>
+            </div>
+            <div id="score-box" class="score-box" aria-label="Potential score">
+              <span id="potential-score-label" class="small-label">Potential Score</span>
+              <span id="potential-score" class="score-number">0</span>
+            </div>
+          </div>
+
+          <div class="code-zone">
+            <div>
+              <div class="slot-row" id="secret-slots">
+                <span id="secret-label" class="slot-label">Hidden code</span>
+              </div>
+            </div>
+            <div>
+              <div class="slot-row" id="guess-slots">
+                <span id="guess-label" class="slot-label">Current guess</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="message" class="message" role="status" aria-live="polite" aria-atomic="true">Choose characters from the keypad to build your guess.</div>
+          <div id="keypad" class="keypad" aria-label="Character keypad"></div>
+
+          <div class="control-grid">
+            <button id="backspace-button" class="secondary-button" type="button">Backspace</button>
+            <button id="clear-button" class="secondary-button" type="button">Clear</button>
+            <button id="submit-button" class="primary-button" type="button" disabled>Submit Guess</button>
+          </div>
+
+          <button id="return-button" class="danger-button" type="button" style="width: 100%; margin-top: 10px;">
+            Return to Level Selection
+          </button>
+        </section>
+
+        <aside id="history-panel" class="panel history-panel" aria-label="Guess history">
+          <h2 id="history-title">Guess History</h2>
+          <div id="feedback-legend" class="legend" aria-label="Feedback color legend">
+            <span class="legend-item"><span class="legend-swatch exact"></span><span id="legend-exact">Correct position</span></span>
+            <span class="legend-item"><span class="legend-swatch misplaced"></span><span id="legend-misplaced">Wrong position</span></span>
+            <span class="legend-item"><span class="legend-swatch incorrect"></span><span id="legend-incorrect">Incorrect</span></span>
+          </div>
+          <div id="history-list" class="history-list"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="result-screen" class="screen">
+      <div class="panel result-panel">
+        <h2 id="result-title" class="result-title" tabindex="-1">Access Granted</h2>
+        <p id="result-summary" class="subtitle" style="color: var(--muted); margin: 12px auto 0;"></p>
+        <div class="result-facts">
+          <div class="fact">
+            <span id="result-difficulty-label" class="small-label">Difficulty</span>
+            <strong id="result-difficulty"></strong>
+          </div>
+          <div class="fact">
+            <span id="result-attempts-label" class="small-label">Attempts Used</span>
+            <strong id="result-attempts"></strong>
+          </div>
+          <div class="fact">
+            <span id="result-score-label" class="small-label">Final Score</span>
+            <strong id="result-score"></strong>
+          </div>
+          <div class="fact">
+            <span id="result-code-label" class="small-label">Code</span>
+            <strong id="result-code" class="guess-string"></strong>
+          </div>
+        </div>
+        <div id="result-learning" class="learning"></div>
+        <div class="result-actions">
+          <button id="play-again-button" class="primary-button" type="button">Play Again</button>
+          <button id="choose-level-button" class="secondary-button" type="button">Choose Another Level</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="help-dialog" aria-labelledby="help-title">
+    <div class="help-panel">
+      <h2 id="help-title">How to Play</h2>
+      <p id="help-intro">The system has created a secret access code. Choose characters and submit your guess.</p>
+      <p id="youmoji-help-legend" class="youmoji-legend" hidden></p>
+      <ul>
+        <li id="help-exact"><strong>Correct position:</strong> right character, right place.</li>
+        <li id="help-misplaced"><strong>Wrong position:</strong> right character, wrong place.</li>
+        <li id="help-incorrect"><strong>Incorrect:</strong> not part of the code, or already counted.</li>
+      </ul>
+      <p id="help-outro">Use the clues to crack the code before your attempts run out. This is a logic game about password strength, not real hacking.</p>
+      <button id="help-close" class="secondary-button" type="button">Close</button>
+    </div>
+  </dialog>
+
+  <script>
+    let currentLang = "en";
+    let currentMessageKey = "chooseMessage";
+    let currentMessageTone = "default";
+
+    const YOUMOJI_PATH = "M1117.9,715.6c-219.2-1.3-400.5,178.1-402.3,398.1-1,116.5,47.5,221.6,125.6,295.6,28.4,26.9,72.3,29.5,103.2,5.4,45.5-35.5,104-56.7,171.2-56.7s125.7,21.2,171.2,56.7c31.1,24.2,75.2,21.1,103.8-6,77-73.2,125-176.8,125-291.6,0-220.9-177.9-400.2-397.7-401.5M1115.6,1317.8c-118.7,0-200-89.4-200-200s81.3-201.5,200-201.5,200,90.9,200,201.5-81.2,200-200,200";
+
+    function youmojiMarkup(extraClass = "") {
+      return `<svg class="youmoji-icon ${extraClass}" viewBox="0 0 2231.2 2146.8" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="${YOUMOJI_PATH}"/></svg>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function codeCharacterMarkup(char) {
+      return char === "0" ? youmojiMarkup("youmoji-zero") : escapeHtml(char);
+    }
+
+    function youmojiLegendMarkup() {
+      const text = currentLang === "ja"
+        ? "コードでは、このマークは 0（ゼロ）です。"
+        : "This symbol means 0 (zero) in the code.";
+      return `${youmojiMarkup("youmoji-zero")}<span>${text}</span>`;
+    }
+
+    const TEXT = {
+      en: {
+        brand: "Family Day Security Lab",
+        helpButton: "How to Play",
+        title: "Crack the Access Code",
+        subtitle: "Test your logic. Learn why strong passwords are harder to crack.",
+        education: "The stronger the password, the harder it is to guess.",
+        chooseDifficulty: "Choose a difficulty level",
+        language: "Language",
+        gameBoard: "Game board",
+        feedbackLegend: "Feedback color legend",
+        ages: "Ages",
+        codeLength: "Code length",
+        characters: "Characters",
+        attempts: "Attempts",
+        repeated: "Repeated characters",
+        yes: "Yes",
+        no: "No",
+        start: "Start",
+        difficulty: "Difficulty",
+        attemptsRemaining: "attempts remaining",
+        attemptsLeft: "Attempts left",
+        potentialScore: "Potential Score",
+        hiddenCode: "Hidden code",
+        currentGuess: "Current guess",
+        keypad: "Character keypad",
+        backspace: "Backspace",
+        clear: "Clear",
+        submit: "Submit Guess",
+        returnLevels: "Return to Level Selection",
+        history: "Guess History",
+        noHistory: "No guesses yet. Your clues will appear here after each submitted attempt.",
+        attempt: "Attempt",
+        exact: "Correct position",
+        misplaced: "Wrong position",
+        incorrect: "Incorrect",
+        accessGranted: "Access Granted",
+        accessDenied: "Access Denied",
+        winSummary: (attempts) => `You cracked the code in ${attempts} attempt${attempts === 1 ? "" : "s"}.`,
+        loseSummary: "The system stayed secure. Try again with fresh logic.",
+        attemptsUsed: "Attempts Used",
+        finalScore: "Final Score",
+        code: "Code",
+        learning: "Learning",
+        playAgain: "Play Again",
+        chooseAnother: "Choose Another Level",
+        helpTitle: "How to Play",
+        helpIntro: "The system has created a secret access code. Choose characters and submit your guess.",
+        helpExact: "Correct position: right character, right place.",
+        helpMisplaced: "Wrong position: right character, wrong place.",
+        helpIncorrect: "Incorrect: not part of the code, or already counted.",
+        helpOutro: "Use the clues to crack the code before your attempts run out. This is a logic game about password strength, not real hacking.",
+        close: "Close",
+        chooseMessage: "Choose characters from the keypad to build your guess.",
+        completeSlots: "Complete all code slots before submitting.",
+        duplicateBlocked: "This level does not allow repeated characters.",
+        finished: "This round is complete. Start a new round to play again.",
+        keepGoing: "Keep going. Submit when every slot is filled.",
+        clueRecorded: "Clue recorded. Use the feedback colors to refine your next guess.",
+        chooseChar: (char) => `Choose ${char}`
+      },
+      ja: {
+        brand: "ファミリーデー セキュリティラボ",
+        helpButton: "遊び方",
+        title: "アクセスコードを解読",
+        subtitle: "ロジックで挑戦。強いパスワードほど解読が難しい理由を学ぼう。",
+        education: "強いパスワードほど、推測されにくくなります。",
+        chooseDifficulty: "難易度を選択",
+        language: "言語",
+        gameBoard: "ゲームボード",
+        feedbackLegend: "回答結果の色の説明",
+        ages: "対象年齢",
+        codeLength: "コードの長さ",
+        characters: "使える文字",
+        attempts: "挑戦回数",
+        repeated: "同じ文字の使用",
+        yes: "あり",
+        no: "なし",
+        start: "スタート",
+        difficulty: "難易度",
+        attemptsRemaining: "回 残り",
+        attemptsLeft: "残り挑戦回数",
+        potentialScore: "予想スコア",
+        hiddenCode: "隠されたコード",
+        currentGuess: "今の入力",
+        keypad: "文字キーパッド",
+        backspace: "1文字戻す",
+        clear: "クリア",
+        submit: "回答する",
+        returnLevels: "難易度選択へ戻る",
+        history: "回答履歴",
+        noHistory: "まだ回答はありません。送信するとヒントがここに表示されます。",
+        attempt: "挑戦",
+        exact: "位置も正解",
+        misplaced: "文字は正解・位置違い",
+        incorrect: "不正解",
+        accessGranted: "アクセス許可",
+        accessDenied: "アクセス拒否",
+        winSummary: (attempts) => `${attempts}回でコードを解読しました。`,
+        loseSummary: "システムは守られました。もう一度ロジックで挑戦しましょう。",
+        attemptsUsed: "使った回数",
+        finalScore: "最終スコア",
+        code: "コード",
+        learning: "学び",
+        playAgain: "もう一度",
+        chooseAnother: "別の難易度を選ぶ",
+        helpTitle: "遊び方",
+        helpIntro: "システムが秘密のアクセスコードを作りました。文字を選んで回答を送信しましょう。",
+        helpExact: "位置も正解: 文字も場所も合っています。",
+        helpMisplaced: "文字は正解・位置違い: 文字は入っていますが場所が違います。",
+        helpIncorrect: "不正解: コードにない文字、またはすでに数えられた文字です。",
+        helpOutro: "挑戦回数がなくなる前に、ヒントを使ってコードを解読しましょう。これは本物のハッキングではなく、パスワードの強さを学ぶロジックゲームです。",
+        close: "閉じる",
+        chooseMessage: "キーパッドから文字を選んで回答を作りましょう。",
+        completeSlots: "すべてのスロットを埋めてから送信してください。",
+        duplicateBlocked: "このレベルでは同じ文字を繰り返し使えません。",
+        finished: "このラウンドは終了しました。新しいラウンドを始めてください。",
+        keepGoing: "その調子です。すべてのスロットを埋めたら送信できます。",
+        clueRecorded: "ヒントを記録しました。色を見て次の回答を考えましょう。",
+        chooseChar: (char) => `${char} を選択`
+      }
+    };
+
+    const WELCOME_TEXT = {
+      en: {
+        subtitle: "Use the clues to find the secret code.",
+        education: "Longer passwords with more kinds of characters are harder to guess.",
+        chooseDifficulty: "Choose your level",
+        helpIntro: "The game made a secret code. Pick characters to make your guess.",
+        helpExact: "Green — right character, right place.",
+        helpMisplaced: "Yellow — right character, wrong place.",
+        helpIncorrect: "Red — this character is not in the code, or it was already counted.",
+        helpOutro: "Use the colors and words to improve your next guess. Find the code before you run out of tries."
+      },
+      ja: {
+        subtitle: "ヒントをつかって、ひみつのコードをみつけよう。",
+        education: "長くて、いろいろな文字があるパスワードは、当てにくいよ。",
+        chooseDifficulty: "レベルを選ぶ",
+        helpIntro: "ゲームがひみつのコードをつくりました。文字をえらんで、答えをつくろう。",
+        helpExact: "みどり — 文字も場所も正解。",
+        helpMisplaced: "きいろ — 文字は正解、場所がちがう。",
+        helpIncorrect: "あか — コードにない文字、または、もう数えた文字。",
+        helpOutro: "色とことばのヒントを見て、つぎの答えを考えよう。チャンスがなくなる前にコードを当てよう。"
+      }
+    };
+
+    const WELCOME_MARKUP_JA = {
+      title: "アクセスコードを<ruby>解読<rt>かいどく</rt></ruby>",
+      education: "<ruby>長<rt>なが</rt></ruby>くて、いろいろな<ruby>文字<rt>もじ</rt></ruby>があるパスワードは、<ruby>当<rt>あ</rt></ruby>てにくいよ。",
+      chooseDifficulty: "レベルを<ruby>選<rt>えら</rt></ruby>ぶ",
+      helpButton: "<ruby>遊<rt>あそ</rt></ruby>びかた",
+      helpTitle: "<ruby>遊<rt>あそ</rt></ruby>びかた",
+      helpIntro: "ゲームがひみつのコードをつくりました。<ruby>文字<rt>もじ</rt></ruby>をえらんで、<ruby>答<rt>こた</rt></ruby>えをつくろう。",
+      helpExact: "みどり — <ruby>文字<rt>もじ</rt></ruby>も<ruby>場所<rt>ばしょ</rt></ruby>も<ruby>正解<rt>せいかい</rt></ruby>。",
+      helpMisplaced: "きいろ — <ruby>文字<rt>もじ</rt></ruby>は<ruby>正解<rt>せいかい</rt></ruby>、<ruby>場所<rt>ばしょ</rt></ruby>がちがう。",
+      helpIncorrect: "あか — コードにない<ruby>文字<rt>もじ</rt></ruby>、または、もう<ruby>数<rt>かぞ</rt></ruby>えた<ruby>文字<rt>もじ</rt></ruby>。",
+      helpOutro: "<ruby>色<rt>いろ</rt></ruby>とことばのヒントを<ruby>見<rt>み</rt></ruby>て、つぎの<ruby>答<rt>こた</rt></ruby>えを<ruby>考<rt>かんが</rt></ruby>えよう。チャンスがなくなる<ruby>前<rt>まえ</rt></ruby>にコードを<ruby>当<rt>あ</rt></ruby>てよう。"
+    };
+
+    const JUNIOR_TEXT = {
+      en: {
+        attemptsLeft: "Tries left",
+        attemptsRemaining: "tries left",
+        potentialScore: "Score if you win now",
+        hiddenCode: "Secret code",
+        currentGuess: "Your guess",
+        exact: "Right number, right place",
+        misplaced: "Right number, wrong place",
+        incorrect: "Not in the code",
+        backspace: "Remove one",
+        clear: "Clear all",
+        submit: "Check my answer",
+        returnLevels: "Choose another level",
+        history: "Your guesses",
+        noHistory: "No guesses yet. Your clues will appear here.",
+        attempt: "Try",
+        helpIntro: "Pick 4 numbers to make your guess. Use each number only once.",
+        helpExact: "Green — right number, right place.",
+        helpMisplaced: "Yellow — right number, wrong place.",
+        helpIncorrect: "Red — this number is not in the code.",
+        helpOutro: "Look at the colors and words. Change your numbers and try again before you run out of tries.",
+        accessGranted: "You found it!",
+        accessDenied: "Good try!",
+        winSummary: (attempts) => `You found the code in ${attempts} ${attempts === 1 ? "try" : "tries"}.`,
+        loseSummary: "The code stayed secret. You can try a new one.",
+        learning: "What you learned",
+        chooseMessage: "Pick numbers to make your guess.",
+        completeSlots: "Fill all 4 boxes before checking your answer.",
+        duplicateBlocked: "You can use each number only once.",
+        keepGoing: "Keep going. Fill all 4 boxes.",
+        clueRecorded: "Here is your clue. Use the colors and words for your next guess."
+      },
+      ja: {
+        attemptsLeft: "のこりチャンス",
+        attemptsRemaining: "かい のこり",
+        potentialScore: "いま当てたときのスコア",
+        hiddenCode: "ひみつのコード",
+        currentGuess: "いまの答え",
+        exact: "数字も場所も正解",
+        misplaced: "数字は正解・場所がちがう",
+        incorrect: "コードにない数字",
+        backspace: "1こもどす",
+        clear: "ぜんぶ消す",
+        submit: "この答えをチェック",
+        returnLevels: "レベルをえらぶ",
+        history: "これまでのこたえ",
+        noHistory: "まだこたえはありません。ヒントがここに出るよ。",
+        attempt: "こたえ",
+        keypad: "数字をえらぶボタン",
+        helpIntro: "4つの数字をえらんで、答えをつくろう。同じ数字は1回だけつかえます。",
+        helpExact: "みどり — 数字も場所も正解。",
+        helpMisplaced: "きいろ — 数字は正解、場所がちがう。",
+        helpIncorrect: "あか — コードにない数字。",
+        helpOutro: "色とことばを見て、数字をかえてもう一度やってみよう。",
+        accessGranted: "できた！",
+        accessDenied: "おしい！",
+        winSummary: (attempts) => `${attempts}かいでコードをみつけたよ。`,
+        loseSummary: "コードはまだひみつ。あたらしいコードでもう一度やってみよう。",
+        attemptsUsed: "つかったチャンス",
+        finalScore: "スコア",
+        code: "こたえ",
+        learning: "わかったこと",
+        playAgain: "もう一度あそぶ",
+        chooseAnother: "べつのレベルをえらぶ",
+        chooseMessage: "数字をえらんで、答えをつくろう。",
+        completeSlots: "4つのマスをぜんぶうめてね。",
+        duplicateBlocked: "同じ数字は1回しか使えないよ。",
+        finished: "このゲームはおわりました。もう一度あそんでね。",
+        keepGoing: "そのちょうし。4つのマスをぜんぶうめよう。",
+        clueRecorded: "ヒントが出たよ。色とことばを見て、つぎの答えを考えよう。",
+        chooseChar: (char) => `${char}をえらぶ`
+      }
+    };
+
+    const JUNIOR_MARKUP_JA = {
+      title: "アクセスコードを<ruby>解読<rt>かいどく</rt></ruby>",
+      helpButton: "<ruby>遊<rt>あそ</rt></ruby>びかた",
+      helpTitle: "<ruby>遊<rt>あそ</rt></ruby>びかた",
+      potentialScore: "いま<ruby>当<rt>あ</rt></ruby>てたときのスコア",
+      currentGuess: "いまの<ruby>答<rt>こた</rt></ruby>え",
+      exact: "<ruby>数字<rt>すうじ</rt></ruby>も<ruby>場所<rt>ばしょ</rt></ruby>も<ruby>正解<rt>せいかい</rt></ruby>",
+      misplaced: "<ruby>数字<rt>すうじ</rt></ruby>は<ruby>正解<rt>せいかい</rt></ruby>・<ruby>場所<rt>ばしょ</rt></ruby>がちがう",
+      incorrect: "コードにない<ruby>数字<rt>すうじ</rt></ruby>",
+      clear: "ぜんぶ<ruby>消<rt>け</rt></ruby>す",
+      submit: "この<ruby>答<rt>こた</rt></ruby>えをチェック",
+      helpIntro: "4つの<ruby>数字<rt>すうじ</rt></ruby>をえらんで、<ruby>答<rt>こた</rt></ruby>えをつくろう。<ruby>同<rt>おな</rt></ruby>じ<ruby>数字<rt>すうじ</rt></ruby>は1<ruby>回<rt>かい</rt></ruby>だけつかえます。",
+      helpExact: "みどり — <ruby>数字<rt>すうじ</rt></ruby>も<ruby>場所<rt>ばしょ</rt></ruby>も<ruby>正解<rt>せいかい</rt></ruby>。",
+      helpMisplaced: "きいろ — <ruby>数字<rt>すうじ</rt></ruby>は<ruby>正解<rt>せいかい</rt></ruby>、<ruby>場所<rt>ばしょ</rt></ruby>がちがう。",
+      helpIncorrect: "あか — コードにない<ruby>数字<rt>すうじ</rt></ruby>。",
+      helpOutro: "<ruby>色<rt>いろ</rt></ruby>とことばを<ruby>見<rt>み</rt></ruby>て、<ruby>数字<rt>すうじ</rt></ruby>をかえてもう<ruby>一度<rt>いちど</rt></ruby>やってみよう。",
+      chooseMessage: "<ruby>数字<rt>すうじ</rt></ruby>をえらんで、<ruby>答<rt>こた</rt></ruby>えをつくろう。",
+      duplicateBlocked: "<ruby>同<rt>おな</rt></ruby>じ<ruby>数字<rt>すうじ</rt></ruby>は1<ruby>回<rt>かい</rt></ruby>しか<ruby>使<rt>つか</rt></ruby>えないよ。",
+      clueRecorded: "ヒントが<ruby>出<rt>で</rt></ruby>たよ。<ruby>色<rt>いろ</rt></ruby>とことばを<ruby>見<rt>み</rt></ruby>て、つぎの<ruby>答<rt>こた</rt></ruby>えを<ruby>考<rt>かんが</rt></ruby>えよう。"
+    };
+
+    const DIFFICULTIES = {
+      easy: {
+        id: "easy",
+        name: "Junior Hacker",
+        nameJa: "ジュニアハッカー",
+        age: "6-10",
+        codeLength: 4,
+        characters: ["0", "1", "2", "3", "4", "5"],
+        maxAttempts: 8,
+        allowDuplicates: false,
+        baseScore: 100,
+        penaltyPerFailedAttempt: 10,
+        bonusFastCrack: 20,
+        description: "Find the secret 4-digit code. Use 0 to 5. You can use each number only once.",
+        descriptionJa: "0から5までの数字で、4けたのひみつのコードを当てよう。同じ数字は1回だけ使えます。",
+        descriptionJaHtml: "0から5までの<ruby>数字<rt>すうじ</rt></ruby>で、4けたのひみつのコードを<ruby>当<rt>あ</rt></ruby>てよう。<ruby>同<rt>おな</rt></ruby>じ<ruby>数字<rt>すうじ</rt></ruby>は1<ruby>回<rt>かい</rt></ruby>だけ<ruby>使<rt>つか</rt></ruby>えます。",
+        characterLabel: "0-5",
+        characterLabelJa: "0～5",
+        learningWin: "You found it! The clues helped you solve the code.",
+        learningLose: "Good try! Look at the colors and words, then try a new code.",
+        learningWinJa: "できたね！色とことばのヒントで、答えをみつけたよ。",
+        learningLoseJa: "よくがんばったね！色とことばを見て、もう一度やってみよう。",
+        learningWinJaHtml: "できたね！<ruby>色<rt>いろ</rt></ruby>とことばのヒントで、<ruby>答<rt>こた</rt></ruby>えをみつけたよ。",
+        learningLoseJaHtml: "よくがんばったね！<ruby>色<rt>いろ</rt></ruby>とことばを<ruby>見<rt>み</rt></ruby>て、もう<ruby>一度<rt>いちど</rt></ruby>やってみよう。"
+      },
+      medium: {
+        id: "medium",
+        name: "Cyber Agent",
+        nameJa: "サイバーエージェント",
+        age: "10-15",
+        codeLength: 5,
+        characters: ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"],
+        maxAttempts: 9,
+        allowDuplicates: true,
+        baseScore: 150,
+        penaltyPerFailedAttempt: 12,
+        bonusFastCrack: 20,
+        description: "Guess a 5-character access key using numbers and letters.",
+        descriptionJa: "数字と小文字を使った5文字のアクセスキーを当てよう。",
+        characterLabel: "0-9 and a-f",
+        characterLabelJa: "0～9 と a～f",
+        learningWin: "Adding letters increases the number of possible passwords.",
+        learningLose: "Mixed characters create many more possible combinations. That makes passwords harder to crack.",
+        learningWinJa: "文字を足すと、パスワードの組み合わせは大きく増えます。",
+        learningLoseJa: "文字の種類を混ぜると組み合わせが増え、パスワードは解読されにくくなります。"
+      },
+      hard: {
+        id: "hard",
+        name: "Security Specialist",
+        nameJa: "セキュリティスペシャリスト",
+        age: "16-18",
+        codeLength: 6,
+        characters: ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F","a","b","c","d","e","f","!","?","#","@"],
+        maxAttempts: 10,
+        allowDuplicates: true,
+        baseScore: 200,
+        penaltyPerFailedAttempt: 15,
+        bonusFastCrack: 20,
+        description: "Crack a 6-character advanced password using numbers, letters, and symbols.",
+        descriptionJa: "数字、英字、記号を使った6文字の高度なパスワードを解読しよう。",
+        characterLabel: "0-9, A-F, a-f, !, ?, #, @",
+        characterLabelJa: "0～9、A～F、a～f、!、?、#、@",
+        learningWin: "Longer passwords with mixed character types are much harder to crack.",
+        learningLose: "A strong password is long, varied, and hard to predict. Avoid names, birthdays, and simple patterns.",
+        learningWinJa: "長くて文字の種類が多いパスワードは、ずっと解読されにくくなります。",
+        learningLoseJa: "強いパスワードは長く、多様で、予測しにくいものです。名前、誕生日、単純な並びは避けましょう。"
+      }
+    };
+
+    let gameState = {
+      currentDifficulty: null,
+      secretCode: [],
+      currentGuess: [],
+      attempts: [],
+      attemptsUsed: 0,
+      isGameOver: false,
+      didWin: false,
+      finalScore: 0,
+      completedAt: null
+    };
+
+    const screens = {
+      entry: document.getElementById("entry-screen"),
+      game: document.getElementById("game-screen"),
+      result: document.getElementById("result-screen")
+    };
+
+    const elements = {
+      difficultyGrid: document.getElementById("difficulty-grid"),
+      difficultyBadge: document.getElementById("difficulty-badge"),
+      attemptsBadge: document.getElementById("attempts-badge"),
+      potentialScore: document.getElementById("potential-score"),
+      secretSlots: document.getElementById("secret-slots"),
+      guessSlots: document.getElementById("guess-slots"),
+      message: document.getElementById("message"),
+      keypad: document.getElementById("keypad"),
+      submitButton: document.getElementById("submit-button"),
+      historyList: document.getElementById("history-list"),
+      resultTitle: document.getElementById("result-title"),
+      resultSummary: document.getElementById("result-summary"),
+      resultDifficulty: document.getElementById("result-difficulty"),
+      resultAttempts: document.getElementById("result-attempts"),
+      resultScore: document.getElementById("result-score"),
+      resultCode: document.getElementById("result-code"),
+      resultLearning: document.getElementById("result-learning"),
+      helpDialog: document.getElementById("help-dialog")
+    };
+
+    function isJuniorGame() {
+      return gameState.currentDifficulty?.id === "easy";
+    }
+
+    function t(key, ...args) {
+      const juniorValue = isJuniorGame() ? JUNIOR_TEXT[currentLang]?.[key] : undefined;
+      const welcomeValue = !gameState.currentDifficulty ? WELCOME_TEXT[currentLang]?.[key] : undefined;
+      const value = juniorValue ?? welcomeValue ?? TEXT[currentLang][key];
+      return typeof value === "function" ? value(...args) : value;
+    }
+
+    function localizedMarkup(key) {
+      if (currentLang !== "ja") return "";
+      if (isJuniorGame() && JUNIOR_MARKUP_JA[key]) return JUNIOR_MARKUP_JA[key];
+      if (!gameState.currentDifficulty) return WELCOME_MARKUP_JA[key] || "";
+      return "";
+    }
+
+    function setLocalizedContent(id, key, setAriaLabel = false) {
+      const element = document.getElementById(id);
+      const markup = localizedMarkup(key);
+      if (markup) element.innerHTML = markup;
+      else element.textContent = t(key);
+      if (setAriaLabel) element.setAttribute("aria-label", t(key));
+    }
+
+    function configName(config) {
+      return currentLang === "ja" ? config.nameJa : config.name;
+    }
+
+    function configDescription(config) {
+      return currentLang === "ja" ? config.descriptionJa : config.description;
+    }
+
+    function configDescriptionMarkup(config) {
+      if (currentLang === "ja" && config.id === "easy") return config.descriptionJaHtml;
+      return configDescription(config);
+    }
+
+    function configLearning(config) {
+      if (gameState.didWin) return currentLang === "ja" ? config.learningWinJa : config.learningWin;
+      return currentLang === "ja" ? config.learningLoseJa : config.learningLose;
+    }
+
+    function configLearningMarkup(config) {
+      if (currentLang === "ja" && config.id === "easy") {
+        return gameState.didWin ? config.learningWinJaHtml : config.learningLoseJaHtml;
+      }
+      return configLearning(config);
+    }
+
+    function statusLabel(status) {
+      if (status === "exact") return t("exact");
+      if (status === "misplaced") return t("misplaced");
+      return t("incorrect");
+    }
+
+    function renderStaticText() {
+      document.documentElement.lang = currentLang;
+      document.getElementById("brand-label").textContent = t("brand");
+      setLocalizedContent("help-open", "helpButton", true);
+      setLocalizedContent("entry-title", "title");
+      document.getElementById("entry-subtitle").textContent = t("subtitle");
+      setLocalizedContent("education-line", "education");
+      document.getElementById("language-toggle").setAttribute("aria-label", t("language"));
+      elements.difficultyGrid.setAttribute("aria-label", t("chooseDifficulty"));
+      setLocalizedContent("game-title", "title");
+      document.getElementById("game-board").setAttribute("aria-label", t("gameBoard"));
+      document.getElementById("score-box").setAttribute("aria-label", t("potentialScore"));
+      document.getElementById("history-panel").setAttribute("aria-label", t("history"));
+      document.getElementById("feedback-legend").setAttribute("aria-label", t("feedbackLegend"));
+      setLocalizedContent("potential-score-label", "potentialScore");
+      setLocalizedContent("secret-label", "hiddenCode");
+      setLocalizedContent("guess-label", "currentGuess");
+      elements.keypad.setAttribute("aria-label", t("keypad"));
+      setLocalizedContent("backspace-button", "backspace", true);
+      setLocalizedContent("clear-button", "clear", true);
+      setLocalizedContent("submit-button", "submit", true);
+      document.getElementById("return-button").textContent = t("returnLevels");
+      document.getElementById("history-title").textContent = t("history");
+      setLocalizedContent("legend-exact", "exact");
+      setLocalizedContent("legend-misplaced", "misplaced");
+      setLocalizedContent("legend-incorrect", "incorrect");
+      document.getElementById("result-difficulty-label").textContent = t("difficulty");
+      document.getElementById("result-attempts-label").textContent = t("attemptsUsed");
+      document.getElementById("result-score-label").textContent = t("finalScore");
+      document.getElementById("result-code-label").textContent = t("code");
+      document.getElementById("play-again-button").textContent = t("playAgain");
+      document.getElementById("choose-level-button").textContent = t("chooseAnother");
+      setLocalizedContent("help-title", "helpTitle");
+      setLocalizedContent("help-intro", "helpIntro");
+      const helpYoumojiLegend = document.getElementById("youmoji-help-legend");
+      helpYoumojiLegend.hidden = !isJuniorGame();
+      helpYoumojiLegend.innerHTML = isJuniorGame() ? youmojiLegendMarkup() : "";
+      setLocalizedContent("help-exact", "helpExact");
+      setLocalizedContent("help-misplaced", "helpMisplaced");
+      setLocalizedContent("help-incorrect", "helpIncorrect");
+      setLocalizedContent("help-outro", "helpOutro");
+      document.getElementById("help-close").textContent = t("close");
+      document.getElementById("lang-en").classList.toggle("active", currentLang === "en");
+      document.getElementById("lang-ja").classList.toggle("active", currentLang === "ja");
+      document.getElementById("lang-en").setAttribute("aria-pressed", String(currentLang === "en"));
+      document.getElementById("lang-ja").setAttribute("aria-pressed", String(currentLang === "ja"));
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      renderStaticText();
+      renderEntryScreen();
+      if (gameState.currentDifficulty && screens.game.classList.contains("active")) {
+        renderGameScreen();
+        showMessageKey(currentMessageKey, currentMessageTone);
+      }
+      if (gameState.currentDifficulty && screens.result.classList.contains("active")) {
+        renderResultScreen();
+      }
+    }
+
+    function setScreen(screenName, moveFocus = true) {
+      const screenChanged = !screens[screenName].classList.contains("active");
+      Object.values(screens).forEach((screen) => screen.classList.remove("active"));
+      screens[screenName].classList.add("active");
+      if (moveFocus && screenChanged) {
+        const headingIds = {
+          entry: "entry-title",
+          game: "game-title",
+          result: "result-title"
+        };
+        document.getElementById(headingIds[screenName])?.focus();
+      }
+    }
+
+    function generateSecretCode(config) {
+      const secret = [];
+      const available = [...config.characters];
+
+      for (let i = 0; i < config.codeLength; i++) {
+        const source = config.allowDuplicates ? config.characters : available;
+        const index = Math.floor(Math.random() * source.length);
+        secret.push(source[index]);
+        if (!config.allowDuplicates) available.splice(index, 1);
+      }
+
+      return secret;
+    }
+
+    function calculateScore(config, attemptsUsed, didWin) {
+      if (!didWin) return 0;
+      let score = config.baseScore - ((attemptsUsed - 1) * config.penaltyPerFailedAttempt);
+      if (attemptsUsed <= 3) score += config.bonusFastCrack;
+      return Math.max(score, 0);
+    }
+
+    function evaluateGuess(secret, guess) {
+      let exact = 0;
+      let misplaced = 0;
+      const secretUsed = Array(secret.length).fill(false);
+      const guessUsed = Array(guess.length).fill(false);
+
+      for (let i = 0; i < secret.length; i++) {
+        if (guess[i] === secret[i]) {
+          exact++;
+          secretUsed[i] = true;
+          guessUsed[i] = true;
+        }
+      }
+
+      for (let i = 0; i < guess.length; i++) {
+        if (guessUsed[i]) continue;
+        for (let j = 0; j < secret.length; j++) {
+          if (secretUsed[j]) continue;
+          if (guess[i] === secret[j]) {
+            misplaced++;
+            secretUsed[j] = true;
+            guessUsed[i] = true;
+            break;
+          }
+        }
+      }
+
+      return {
+        exact,
+        misplaced,
+        incorrect: secret.length - exact - misplaced
+      };
+    }
+
+    function evaluateGuessDetailed(secret, guess) {
+      const statuses = Array(guess.length).fill("incorrect");
+      const secretUsed = Array(secret.length).fill(false);
+      const guessUsed = Array(guess.length).fill(false);
+
+      for (let i = 0; i < secret.length; i++) {
+        if (guess[i] === secret[i]) {
+          statuses[i] = "exact";
+          secretUsed[i] = true;
+          guessUsed[i] = true;
+        }
+      }
+
+      for (let i = 0; i < guess.length; i++) {
+        if (guessUsed[i]) continue;
+        for (let j = 0; j < secret.length; j++) {
+          if (secretUsed[j]) continue;
+          if (guess[i] === secret[j]) {
+            statuses[i] = "misplaced";
+            secretUsed[j] = true;
+            guessUsed[i] = true;
+            break;
+          }
+        }
+      }
+
+      return statuses;
+    }
+
+    function showMessage(text, tone = "default") {
+      elements.message.textContent = text;
+      elements.message.className = "message";
+      if (tone !== "default") elements.message.classList.add(tone);
+    }
+
+    function showMessageKey(key, tone = "default") {
+      currentMessageKey = key;
+      currentMessageTone = tone;
+      showMessage(t(key), tone);
+      const markup = localizedMarkup(key);
+      if (markup) elements.message.innerHTML = markup;
+    }
+
+    function cardLabelMarkup(key, config) {
+      if (config.id !== "easy") return t(key);
+      if (currentLang === "en") {
+        const labels = {
+          ages: "Ages",
+          codeLength: "Code length",
+          characters: "Numbers",
+          attempts: "Tries",
+          repeated: "Same number twice?"
+        };
+        return labels[key] || t(key);
+      }
+      const labels = {
+        ages: "ねんれい",
+        codeLength: "コードの<ruby>長<rt>なが</rt></ruby>さ",
+        characters: "<ruby>使<rt>つか</rt></ruby>える<ruby>文字<rt>もじ</rt></ruby>",
+        attempts: "チャンス",
+        repeated: "<ruby>同<rt>おな</rt></ruby>じ<ruby>文字<rt>もじ</rt></ruby>を2<ruby>回<rt>かい</rt></ruby><ruby>使<rt>つか</rt></ruby>える？"
+      };
+      return labels[key] || t(key);
+    }
+
+    function juniorCardLegendMarkup(config) {
+      if (config.id !== "easy") return "";
+      return `<p class="youmoji-legend">${youmojiLegendMarkup()}</p>`;
+    }
+
+    function renderEntryScreen() {
+      elements.difficultyGrid.innerHTML = "";
+
+      Object.values(DIFFICULTIES).forEach((config) => {
+        const card = document.createElement("article");
+        card.className = "difficulty-card";
+        card.innerHTML = `
+          <div class="difficulty-top">
+            <div>
+              <h2 class="difficulty-name">${configName(config)}</h2>
+              <p class="card-copy" style="margin: 5px 0 0;">${cardLabelMarkup("ages", config)} ${config.age}</p>
+            </div>
+            <span class="age">${cardLabelMarkup("ages", config)} ${config.age}</span>
+          </div>
+          <p class="card-copy">${configDescriptionMarkup(config)}</p>
+          ${juniorCardLegendMarkup(config)}
+          <ul class="settings">
+            <li><span>${cardLabelMarkup("codeLength", config)}</span><strong>${config.codeLength}</strong></li>
+            <li><span>${cardLabelMarkup("characters", config)}</span><strong>${currentLang === "ja" ? config.characterLabelJa : config.characterLabel}</strong></li>
+            <li><span>${cardLabelMarkup("attempts", config)}</span><strong>${config.maxAttempts}</strong></li>
+            <li><span>${cardLabelMarkup("repeated", config)}</span><strong>${config.allowDuplicates ? t("yes") : (currentLang === "ja" && config.id === "easy" ? "いいえ" : t("no"))}</strong></li>
+          </ul>
+          <button class="start-button" type="button">${t("start")} ${configName(config)}</button>
+        `;
+        card.querySelector("button").addEventListener("click", () => startGame(config.id));
+        elements.difficultyGrid.appendChild(card);
+      });
+    }
+
+    function startGame(difficultyId) {
+      const config = DIFFICULTIES[difficultyId];
+      gameState = {
+        currentDifficulty: config,
+        secretCode: generateSecretCode(config),
+        currentGuess: [],
+        attempts: [],
+        attemptsUsed: 0,
+        isGameOver: false,
+        didWin: false,
+        finalScore: 0,
+        completedAt: null
+      };
+      renderStaticText();
+      setScreen("game");
+      renderGameScreen();
+      showMessageKey("chooseMessage");
+    }
+
+    function selectCharacter(char) {
+      const config = gameState.currentDifficulty;
+      if (!config) return;
+      if (gameState.isGameOver) {
+        showMessageKey("finished", "warning");
+        return;
+      }
+      if (gameState.currentGuess.length >= config.codeLength) return;
+      if (!config.allowDuplicates && gameState.currentGuess.includes(char)) {
+        showMessageKey("duplicateBlocked", "warning");
+        return;
+      }
+
+      gameState.currentGuess.push(char);
+      renderGameScreen();
+      showMessageKey("keepGoing");
+    }
+
+    function removeLastCharacter() {
+      if (gameState.isGameOver) {
+        showMessageKey("finished", "warning");
+        return;
+      }
+      gameState.currentGuess.pop();
+      renderGameScreen();
+      showMessageKey(gameState.currentGuess.length ? "keepGoing" : "chooseMessage");
+    }
+
+    function clearGuess() {
+      if (gameState.isGameOver) {
+        showMessageKey("finished", "warning");
+        return;
+      }
+      gameState.currentGuess = [];
+      renderGameScreen();
+      showMessageKey("chooseMessage");
+    }
+
+    function submitGuess() {
+      const config = gameState.currentDifficulty;
+      if (!config) return;
+      if (gameState.isGameOver) {
+        showMessageKey("finished", "warning");
+        return;
+      }
+      if (gameState.currentGuess.length !== config.codeLength) {
+        showMessageKey("completeSlots", "warning");
+        return;
+      }
+
+      const guess = [...gameState.currentGuess];
+      const feedback = evaluateGuess(gameState.secretCode, guess);
+      const statuses = evaluateGuessDetailed(gameState.secretCode, guess);
+      gameState.attempts.push({ guess, statuses, ...feedback });
+      gameState.attemptsUsed += 1;
+      gameState.currentGuess = [];
+
+      if (feedback.exact === config.codeLength) {
+        gameState.didWin = true;
+        gameState.isGameOver = true;
+        gameState.finalScore = calculateScore(config, gameState.attemptsUsed, true);
+        gameState.completedAt = new Date().toISOString();
+        publishGameResult();
+        renderResultScreen();
+        return;
+      }
+
+      if (gameState.attemptsUsed >= config.maxAttempts) {
+        gameState.didWin = false;
+        gameState.isGameOver = true;
+        gameState.finalScore = 0;
+        gameState.completedAt = new Date().toISOString();
+        publishGameResult();
+        renderResultScreen();
+        return;
+      }
+
+      renderGameScreen();
+      showMessageKey("clueRecorded", "success");
+    }
+
+    function renderSlots(container, values, length, locked = false, labelKey = "") {
+      container.innerHTML = "";
+      const label = document.createElement("span");
+      label.className = "slot-label";
+      label.id = container.id === "secret-slots" ? "secret-label" : "guess-label";
+      const labelMarkup = localizedMarkup(labelKey);
+      if (labelMarkup) label.innerHTML = labelMarkup;
+      else label.textContent = t(labelKey);
+      container.appendChild(label);
+      for (let i = 0; i < length; i++) {
+        const slot = document.createElement("span");
+        slot.className = locked ? "slot locked" : "slot";
+        const value = locked ? "?" : (values[i] || "");
+        if (value === "0") slot.innerHTML = codeCharacterMarkup(value);
+        else slot.textContent = value;
+        if (!locked && value) {
+          slot.setAttribute("aria-label", currentLang === "ja" ? `${i + 1}ばん: ${value}` : `Position ${i + 1}: ${value}`);
+        }
+        container.appendChild(slot);
+      }
+    }
+
+    function renderGameScreen() {
+      const config = gameState.currentDifficulty;
+      if (!config) return;
+      const focusedKey = elements.keypad.contains(document.activeElement)
+        ? document.activeElement.dataset.char
+        : null;
+      const attemptsRemaining = config.maxAttempts - gameState.attemptsUsed;
+      const nextAttemptNumber = gameState.attemptsUsed + 1;
+
+      elements.difficultyBadge.textContent = configName(config);
+      elements.attemptsBadge.textContent = currentLang === "ja"
+        ? `${attemptsRemaining}${t("attemptsRemaining")}`
+        : `${attemptsRemaining} ${t("attemptsRemaining")}`;
+      document.getElementById("attempts-left-label").textContent = t("attemptsLeft");
+      document.getElementById("attempts-left-number").textContent = attemptsRemaining;
+      elements.potentialScore.textContent = calculateScore(config, nextAttemptNumber, true);
+
+      renderSlots(elements.secretSlots, [], config.codeLength, true, "hiddenCode");
+      renderSlots(elements.guessSlots, gameState.currentGuess, config.codeLength, false, "currentGuess");
+      renderKeypad(config);
+      renderHistory();
+      const incomplete = gameState.currentGuess.length !== config.codeLength;
+      elements.submitButton.disabled = gameState.isGameOver || incomplete;
+      elements.submitButton.setAttribute("aria-disabled", String(gameState.isGameOver || incomplete));
+
+      if (focusedKey && !gameState.isGameOver) {
+        if (!incomplete) {
+          elements.submitButton.focus();
+        } else {
+          const matchingKey = [...elements.keypad.querySelectorAll(".key")]
+            .find((button) => button.dataset.char === focusedKey);
+          matchingKey?.focus();
+        }
+      }
+    }
+
+    function renderKeypad(config) {
+      elements.keypad.innerHTML = "";
+      config.characters.forEach((char) => {
+        const button = document.createElement("button");
+        button.className = "key";
+        button.type = "button";
+        if (char === "0") button.innerHTML = codeCharacterMarkup(char);
+        else button.textContent = char;
+        button.dataset.char = char;
+        button.setAttribute("aria-label", t("chooseChar", char));
+        const blockedDuplicate = !config.allowDuplicates && gameState.currentGuess.includes(char);
+        if (blockedDuplicate) button.classList.add("used");
+        button.disabled = gameState.isGameOver || gameState.currentGuess.length >= config.codeLength;
+        button.addEventListener("click", () => selectCharacter(char));
+        elements.keypad.appendChild(button);
+      });
+    }
+
+    function renderHistory() {
+      elements.historyList.innerHTML = "";
+      if (gameState.attempts.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty-history";
+        empty.textContent = t("noHistory");
+        elements.historyList.appendChild(empty);
+        return;
+      }
+
+      [...gameState.attempts].reverse().forEach((attempt, reversedIndex) => {
+        const attemptNumber = gameState.attempts.length - reversedIndex;
+        const exactLabel = localizedMarkup("exact") || t("exact");
+        const misplacedLabel = localizedMarkup("misplaced") || t("misplaced");
+        const incorrectLabel = localizedMarkup("incorrect") || t("incorrect");
+        const card = document.createElement("article");
+        card.className = "attempt-card";
+        card.innerHTML = `
+          <div class="attempt-top">
+            <span>${t("attempt")} ${attemptNumber}</span>
+            <span class="guess-chip-row" role="list" aria-label="${t("attempt")} ${attemptNumber} ${t("currentGuess")}">
+              ${attempt.guess.map((char, charIndex) => {
+                const status = attempt.statuses?.[charIndex] || "incorrect";
+                const label = statusLabel(status);
+                return `<span class="guess-chip ${status}" role="listitem" title="${label}" aria-label="${char}: ${label}">${codeCharacterMarkup(char)}</span>`;
+              }).join("")}
+            </span>
+          </div>
+          <div class="feedback-grid">
+            <div class="feedback-row"><span>${exactLabel}</span><strong>${attempt.exact}</strong></div>
+            <div class="feedback-row"><span>${misplacedLabel}</span><strong>${attempt.misplaced}</strong></div>
+            <div class="feedback-row"><span>${incorrectLabel}</span><strong>${attempt.incorrect}</strong></div>
+          </div>
+        `;
+        elements.historyList.appendChild(card);
+      });
+    }
+
+    function renderResultScreen() {
+      const config = gameState.currentDifficulty;
+      setScreen("result");
+
+      elements.resultTitle.textContent = gameState.didWin ? t("accessGranted") : t("accessDenied");
+      elements.resultTitle.className = `result-title ${gameState.didWin ? "win" : "lose"}`;
+      elements.resultSummary.textContent = gameState.didWin
+        ? t("winSummary", gameState.attemptsUsed)
+        : t("loseSummary");
+      elements.resultDifficulty.textContent = configName(config);
+      elements.resultAttempts.textContent = `${gameState.attemptsUsed} / ${config.maxAttempts}`;
+      elements.resultScore.textContent = gameState.finalScore;
+      elements.resultCode.classList.add("result-code-row");
+      elements.resultCode.setAttribute("aria-label", gameState.secretCode.join(" "));
+      elements.resultCode.innerHTML = gameState.secretCode
+        .map((char) => `<span class="result-code-character" aria-hidden="true">${codeCharacterMarkup(char)}</span>`)
+        .join("");
+      elements.resultLearning.innerHTML = `${t("learning")}: ${configLearningMarkup(config)}`;
+
+    }
+
+    function publishGameResult() {
+      const config = gameState.currentDifficulty;
+      window.latestGameResult = {
+        gameId: "password-mastermind",
+        gameName: "Crack the Access Code",
+        difficulty: config.name,
+        difficultyId: config.id,
+        didWin: gameState.didWin,
+        attemptsUsed: gameState.attemptsUsed,
+        maxAttempts: config.maxAttempts,
+        score: gameState.finalScore,
+        completedAt: gameState.completedAt
+      };
+    }
+
+    function returnToLevelSelection() {
+      gameState.currentDifficulty = null;
+      gameState.secretCode = [];
+      gameState.currentGuess = [];
+      gameState.attempts = [];
+      gameState.attemptsUsed = 0;
+      gameState.isGameOver = false;
+      gameState.didWin = false;
+      gameState.finalScore = 0;
+      gameState.completedAt = null;
+      renderStaticText();
+      renderEntryScreen();
+      setScreen("entry");
+    }
+
+    document.getElementById("backspace-button").addEventListener("click", removeLastCharacter);
+    document.getElementById("clear-button").addEventListener("click", clearGuess);
+    document.getElementById("submit-button").addEventListener("click", submitGuess);
+    document.getElementById("return-button").addEventListener("click", returnToLevelSelection);
+    document.getElementById("play-again-button").addEventListener("click", () => startGame(gameState.currentDifficulty.id));
+    document.getElementById("choose-level-button").addEventListener("click", returnToLevelSelection);
+    document.getElementById("lang-en").addEventListener("click", () => setLanguage("en"));
+    document.getElementById("lang-ja").addEventListener("click", () => setLanguage("ja"));
+
+    document.getElementById("help-open").addEventListener("click", () => {
+      if (typeof elements.helpDialog.showModal === "function") {
+        elements.helpDialog.showModal();
+      }
+    });
+    document.getElementById("help-close").addEventListener("click", () => elements.helpDialog.close());
+
+    document.addEventListener("keydown", (event) => {
+      const config = gameState.currentDifficulty;
+      if (!config || !screens.game.classList.contains("active")) return;
+      if (elements.helpDialog.open) return;
+
+      if (event.key === "Enter") {
+        event.preventDefault();
+        submitGuess();
+        return;
+      }
+      if (event.key === "Backspace") {
+        event.preventDefault();
+        removeLastCharacter();
+        return;
+      }
+      if (event.key === "Escape") {
+        event.preventDefault();
+        clearGuess();
+        return;
+      }
+      if (config.characters.includes(event.key)) {
+        event.preventDefault();
+        selectCharacter(event.key);
+      }
+    });
+
+    renderStaticText();
+    renderEntryScreen();
+
+    window.__accessCodeGame = {
+      DIFFICULTIES,
+      evaluateGuess,
+      evaluateGuessDetailed,
+      calculateScore,
+      generateSecretCode
+    };
+  </script>
+</body>
+</html>
